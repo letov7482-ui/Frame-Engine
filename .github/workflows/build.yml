@@ -2,9 +2,10 @@ name: Build SmoothPacing Mod
 
 on:
   push:
-    branches: [ "master", "main" ] # Сборка запускается при пуше в эти ветки
+    branches: [ "master", "main" ] # Авто-сборка при пуше в эти ветки
   pull_request:
     branches: [ "master", "main" ]
+  workflow_dispatch: # ✦ ЭТА СТРОКА ДОБАВЛЯЕТ КНОПКУ РУЧНОГО ЗАПУСКА В ACTIONS ✦
 
 jobs:
   build:
