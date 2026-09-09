@@ -1,30 +1,45 @@
-# Automatically build the project and run any configured tests for every push
-# and submitted pull request. This can help catch issues that only occur on
-# certain platforms or Java versions, and provides a first line of defence
-# against bad commits.
+name: Build SmoothPacing Mod
 
-name: build
-on: [pull_request, push]
+on:
+  push:
+    branches: [ "master", "main" ] # Сборка запускается при пуше в эти ветки
+  pull_request:
+    branches: [ "master", "main" ]
 
 jobs:
   build:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+
     steps:
-      - name: checkout repository
-        uses: actions/checkout@v6
-      - name: validate gradle wrapper
-        uses: gradle/actions/wrapper-validation@v6
-      - name: setup jdk
-        uses: actions/setup-java@v5
+      # 1. Скачиваем файлы вашего репозитория на сервер сборки
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Настраиваем Java 21 (необходима для Minecraft 1.21.11)
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
         with:
-          java-version: '25'
           distribution: 'microsoft'
-      - name: make gradle wrapper executable
-        run: chmod +x ./gradlew
-      - name: build
-        run: ./gradlew build
-      - name: capture build artifacts
-        uses: actions/upload-artifact@v7
+          java-version: '21'
+
+      # 3. Принудительно устанавливаем стабильный Gradle 8.10 вместо проблемного 9.5
+      - name: Setup Gradle 8.10
+        uses: gradle/actions/setup-gradle@v4
         with:
-          name: Artifacts
-          path: build/libs/
+          gradle-version: 8.10
+
+      # 4. Выдаем права на запуск gradle-скрипту (необходимо для Linux-серверов)
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x gradlew
+
+      # 5. Запускаем сборку мода
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      # 6. Сохраняем готовый .jar файл в артефакты GitHub Actions
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: SmoothPacing-Fabric-1.21.11
+          path: build/libs/*.jar
+          
