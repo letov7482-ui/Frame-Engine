@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "net.yourname.smoothpacing.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "MinecraftClientMixin",
+    "GameRendererMixin",
+    "ChunkRenderDispatcherMixin",
+    "BlockEntityRenderDispatcherMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
