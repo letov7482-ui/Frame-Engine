@@ -2,42 +2,36 @@ name: Build SmoothPacing Mod
 
 on:
   push:
-    branches: [ "master", "main" ] # Авто-сборка при пуше в эти ветки
+    branches: [ "**" ] # Включает авто-сборку при пуше в ВООБЩЕ ЛЮБУЮ ветку
   pull_request:
-    branches: [ "master", "main" ]
-  workflow_dispatch: # ✦ ЭТА СТРОКА ДОБАВЛЯЕТ КНОПКУ РУЧНОГО ЗАПУСКА В ACTIONS ✦
+    branches: [ "**" ]
+  workflow_dispatch: # Добавляет кнопку ручного запуска
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Скачиваем файлы вашего репозитория на сервер сборки
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # 2. Настраиваем Java 21 (необходима для Minecraft 1.21.11)
       - name: Setup Java 21
         uses: actions/setup-java@v4
         with:
           distribution: 'microsoft'
           java-version: '21'
 
-      # 3. Принудительно устанавливаем стабильный Gradle 8.10 вместо проблемного 9.5
       - name: Setup Gradle 8.10
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.10
 
-      # 4. Выдаем права на запуск gradle-скрипту (необходимо для Linux-серверов)
       - name: Make Gradle Wrapper Executable
         run: chmod +x gradlew
 
-      # 5. Запускаем сборку мода
       - name: Build with Gradle
         run: ./gradlew build
 
-      # 6. Сохраняем готовый .jar файл в артефакты GitHub Actions
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
