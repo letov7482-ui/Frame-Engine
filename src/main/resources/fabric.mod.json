@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "id": "smoothpacing",
+  "version": "${version}",
+  "name": "Smooth Pacing Engine",
+  "description": "Умная стабилизация Frame Time, адаптивное разрешение и честный мониторинг.",
+  "authors": [
+    "YourName"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/smoothpacing/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "net.yourname.smoothpacing.SmoothPacingClient"
+    ]
+  },
+  "mixins": [
+    "smoothpacing.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "1.21.11",
+    "fabric-api": "*"
+  }
+}
