@@ -16,8 +16,12 @@ public class SmoothGuiScreen extends Screen {
 
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        // Получаем точные адаптивные размеры окна в 1.21.11
+        int screenWidth = this.minecraft.getWindow().getGuiScaledWidth();
+        int screenHeight = this.minecraft.getWindow().getGuiScaledHeight();
+
         // 1. Рисуем красивый полупрозрачный футуристичный фон
-        guiGraphics.fill(15, 15, this.width - 15, this.height - 15, 0xD50A0A10);
+        guiGraphics.fill(15, 15, screenWidth - 15, screenHeight - 15, 0xD50A0A10);
         
         // Вспомогательные переменные для разметки текста
         int textX = 30;
@@ -39,11 +43,11 @@ public class SmoothGuiScreen extends Screen {
         List<Long> history = FrameTimeTracker.getHistory();
         if (history.size() > 1) {
             int graphX = 30;
-            int graphY = this.height - 40;
+            int graphY = screenHeight - 40;
             int graphHeight = 120;
-            int graphWidth = this.width - 60;
+            int graphWidth = screenWidth - 60;
             
-            // Максимальная планка шкалы графика (в миллисекундах) — например, 25 мс
+            // Максимальная планка шкалы графика (в миллисекундах) — 25 мс
             double maxGraphMs = 25.0; 
 
             // Рисуем зеленую линию-лимит вашей герцовки
@@ -58,7 +62,7 @@ public class SmoothGuiScreen extends Screen {
                 double msCurrent = history.get(i) / 1_000_000.0;
                 double msNext = history.get(i + 1) / 1_000_000.0;
                 
-                // Рассчитываем шаг по оси X динамически, чтобы график растягивался под экран телефона/ПК
+                // Шаг по оси X
                 float stepX = (float) graphWidth / history.size();
                 int x1 = graphX + (int)(i * stepX);
                 int x2 = graphX + (int)((i + 1) * stepX);
@@ -71,7 +75,7 @@ public class SmoothGuiScreen extends Screen {
                 y1 = Math.max(graphY - graphHeight, Math.min(graphY, y1));
                 y2 = Math.max(graphY - graphHeight, Math.min(graphY, y2));
 
-                // Если время кадра превышает лимит герцовки — пиксель становится огненно-красным (зафиксирован статтер)
+                // Если время кадра превышает лимит герцовки — пиксель становится красным
                 int color = (msCurrent > targetMs) ? 0xFF3333 : 0x00FFCC;
                 
                 // Отрисовываем вертикальные сегменты графика
@@ -84,6 +88,7 @@ public class SmoothGuiScreen extends Screen {
 
     @Override
     public boolean isPauseScreen() {
-        return false; // Мониторинг должен идти на живой игре, без паузы мира!
+        // Мониторинг должен идти на живой игре, без паузы мира
+        return false; 
     }
 }
